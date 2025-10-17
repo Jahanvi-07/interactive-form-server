@@ -2,13 +2,21 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // In-memory storage for validated submissions
 const submissions = [];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+  // Basic CORS for development environment
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
